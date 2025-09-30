@@ -1,0 +1,239 @@
+/* Define variáveis de cor para facilitar a manutenção /
+/ ESTE É O NOSSO TEMA ESCURO (PADRÃO) */
+:root {
+--background-color: #282c34;
+--text-color: #e6e6e6;
+--link-color: #61dafb;
+--container-bg-color: #32363e;
+--card-bg-color: #3c4049;
+--border-color: #444;
+--footer-text-color: #aaa;
+--accent-color: #61dafb;
+--button-text-color: #282c34;
+}
+
+/* AQUI DEFINIMOS AS CORES PARA O NOVO TEMA CLARO "SOFT" */
+body[data-theme="light"] {
+--background-color: #f5f5f5; /* Fundo cinza bem claro */
+--text-color: #333333;       /* Texto cinza escuro, não preto */
+--link-color: #0056b3;       /* Azul mais sóbrio para links */
+--container-bg-color: #ffffff; /* Container branco */
+--card-bg-color: #ffffff;    /* Cards brancos */
+--border-color: #e0e0e0;     /* Borda cinza suave */
+--footer-text-color: #555555;
+--accent-color: #0056b3;
+--button-text-color: #ffffff;
+}
+
+/* Reseta e define o básico para o corpo da página */
+body {
+margin: 0;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+
+background-color: var(--background-color);
+color: var(--text-color);
+transition: background-color 0.3s ease, color 0.3s ease;
+
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+.content-wrapper {
+flex: 1;
+}
+
+/* Centraliza nosso conteúdo principal e limita a largura para melhor leitura */
+main {
+max-width: 800px;
+margin: 40px auto;
+padding: 20px;
+background-color: var(--container-bg-color);
+border-radius: 8px;
+transition: background-color 0.3s ease;
+}
+
+/* Estiliza os links */
+a {
+color: var(--link-color);
+text-decoration: none;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+/* Melhora a legibilidade dos títulos e parágrafos */
+h1, h2, h3 {
+line-height: 1.2;
+}
+
+p, li {
+line-height: 1.6;
+}
+
+/* Estrutura do Layout */
+.site-header {
+background-color: var(--container-bg-color);
+padding: 1rem 0;
+border-bottom: 1px solid var(--border-color);
+width: 100%;
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-content {
+max-width: 800px;
+margin: 0 auto;
+padding: 0 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.header-content a {
+color: var(--text-color);
+font-weight: bold;
+font-size: 1.5rem;
+}
+
+.site-footer {
+text-align: center;
+padding: 2rem 0;
+margin-top: auto;
+font-size: 0.9rem;
+color: var(--footer-text-color);
+border-top: 1px solid var(--border-color);
+background-color: var(--container-bg-color);
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Estilos da Página Inicial */
+.page-header {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.search-input {
+width: 100%;
+padding: 12px;
+font-size: 1rem;
+border-radius: 8px;
+border: 1px solid var(--border-color);
+background-color: var(--background-color);
+color: var(--text-color);
+margin-top: 20px;
+}
+
+.category-filters {
+display: flex;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+margin-bottom: 40px;
+}
+
+.category-button {
+padding: 8px 16px;
+border-radius: 20px;
+border: 1px solid var(--border-color);
+background-color: transparent;
+color: var(--text-color);
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-button:hover {
+background-color: var(--card-bg-color);
+}
+
+.category-button.active {
+background-color: var(--accent-color);
+color: var(--button-text-color);
+font-weight: bold;
+border-color: var(--accent-color);
+}
+
+/* Estilos para o grid de artigos */
+.article-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+gap: 30px 20px; /* 30px de espaço vertical, 20px de espaço horizontal */
+padding: 0;
+list-style: none;
+grid-auto-rows: 1fr; /* Esta linha iguala a altura de todos os cards na grade */
+}
+
+/* Estilos para cada card de artigo */
+.article-card {
+background-color: var(--card-bg-color);
+border-radius: 8px;
+padding: 20px;
+transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease;
+height: 100%;
+}
+
+.article-card a {
+text-decoration: none;
+color: inherit;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+height: 100%;
+}
+
+.article-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.article-card h3 {
+margin-top: 0;
+margin-bottom: 10px;
+color: var(--text-color);
+}
+
+.article-card p {
+margin-bottom: 0;
+color: var(--link-color);
+font-weight: bold;
+}
+
+.article-category {
+display: inline-block;
+background-color: var(--accent-color);
+color: var(--button-text-color);
+padding: 4px 8px;
+border-radius: 12px;
+font-size: 0.8rem;
+font-weight: bold;
+margin-bottom: 15px;
+}
+
+.error-message {
+color: #ff6b6b;
+}
+
+/* Estilo do Seletor de Tema */
+.theme-switcher {
+background-color: var(--card-bg-color);
+border: 1px solid var(--border-color);
+color: var(--text-color);
+width: 45px;
+height: 45px;
+border-radius: 50%;
+cursor: pointer;
+font-size: 1.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+}
+
+.theme-switcher:hover {
+background-color: var(--background-color);
+transform: scale(1.1);
+}
