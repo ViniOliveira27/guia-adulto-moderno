@@ -8,7 +8,8 @@ app = FastAPI()
 # Lista de origens permitidas (seu site local e o site no ar)
 origins = [
     "http://localhost:3000",
-    "https://vercel.com/vinioliveira27s-projects/guia-adulto-moderno-abmk/63nB7XBVZYSuu2ZRbjifrCm1ibXS",
+    # Este é o URL público correto do seu site na Vercel
+    "https://guia-adulto-moderno-abmk-oxebguph-vinioliveira27s-projects.vercel.app",
 ]
 
 app.add_middleware(
@@ -62,3 +63,4 @@ def get_article(slug: str):
         "category": post.metadata.get("category", "Sem categoria"),
         "content": post.content
     }
+
