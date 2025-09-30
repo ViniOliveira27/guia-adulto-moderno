@@ -8,7 +8,7 @@ app = FastAPI()
 # Lista de origens permitidas (seu site local e o site no ar)
 origins = [
     "http://localhost:3000",
-    "https://guia-adulto-moderno-abmk-4wqh7i5ff-vinioliveira27s-projects.vercel.app",
+    "https://vercel.com/vinioliveira27s-projects/guia-adulto-moderno-abmk/63nB7XBVZYSuu2ZRbjifrCm1ibXS",
 ]
 
 app.add_middleware(
