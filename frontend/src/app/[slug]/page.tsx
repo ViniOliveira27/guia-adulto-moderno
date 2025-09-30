@@ -1,63 +1,58 @@
-// O import do 'next/link' foi removido para resolver um erro de compilação.
-// A navegação agora usa uma tag <a> padrão.
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
-// Define uma interface para os props que o Next.js passa para a página.
-// Isso torna o código mais claro e seguro.
-interface ArticlePageProps {
-  params: {
-    slug: string;
-  };
-}
-
-// Define o tipo de dado que esperamos para um artigo, incluindo o conteúdo
+// Define o tipo do artigo, incluindo o título e a categoria
 type Article = {
   slug: string;
+  title: string;
+  category: string;
   content: string;
 };
 
-// A página recebe 'params' do Next.js, que contém o 'slug' pego da URL.
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  
-  // Adiciona uma verificação de segurança.
-  if (!params?.slug) {
+// Função para buscar os dados de um artigo específico
+async function getArticle(slug: string): Promise<Article | null> {
+  try {
+    // IMPORTANTE: Para o deploy, esta URL precisa ser a URL pública do seu backend
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || `http://127.0.0.1:8000`;
+    const res = await fetch(`${apiUrl}/articles/${slug}`, {
+      cache: 'no-store',
+    });
+
+    if (!res.ok) {
+      return null;
+    }
+    
+    return res.json();
+  } catch (error) {
+    console.error("Failed to fetch article:", error);
+    return null;
+  }
+}
+
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  const article = await getArticle(params.slug);
+
+  // Se o artigo não for encontrado, exibe uma mensagem amigável
+  if (!article) {
     return (
       <main>
         <h1>Artigo não encontrado</h1>
-        <p>Não foi possível encontrar o identificador do artigo na URL.</p>
+        <p>
+          O artigo que você está procurando não existe ou foi movido.
+        </p>
+        <Link href="/">← Voltar para a lista</Link>
       </main>
     );
   }
-
-  // Busca o conteúdo do artigo específico na nossa API Python, usando o slug.
-  const res = await fetch(`http://127.0.0.1:8000/articles/${params.slug}`, {
-    cache: 'no-store',
-  });
-
-  // Adiciona uma verificação para o caso de a API falhar.
-  if (!res.ok) {
-    return (
-      <main>
-        <h1>Erro ao carregar o artigo</h1>
-        <p>Não foi possível buscar o conteúdo. Verifique se a API está funcionando corretamente.</p>
-      </main>
-    );
-  }
-
-  // Converte a resposta da API para o formato JSON
-  const article: Article = await res.json();
 
   return (
     <main>
-      {/* O componente Link foi substituído por uma tag <a> para compatibilidade. */}
-      <a href="/" style={{ marginBottom: '2rem', display: 'block' }}>
-        &larr; Voltar para a lista
-      </a>
-      
-      {/* Usamos o componente <ReactMarkdown> para renderizar o conteúdo. */}
-      <ReactMarkdown>
-        {article.content}
-      </ReactMarkdown>
+      <Link href="/">← Voltar para a lista</Link>
+      <div style={{ marginTop: '20px' }}>
+        <span className="article-category">{article.category}</span>
+        <h1>{article.title}</h1>
+        <ReactMarkdown>{article.content}</ReactMarkdown>
+      </div>
     </main>
   );
 }
