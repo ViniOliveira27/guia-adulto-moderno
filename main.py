@@ -5,12 +5,10 @@ import frontmatter  # Importa a biblioteca para ler o frontmatter
 
 app = FastAPI()
 
-# Lista de origens permitidas (seu site local e o site no ar)
-origins = [
-    "http://localhost:3000",
-    # Este é o URL público mais recente do seu site na Vercel
-    "https://guia-adulto-moderno-n652.vercel.app/",
-]
+# A SOLUÇÃO DEFINITIVA:
+# Em vez de uma lista de URLs, usamos "*" que significa "permitir qualquer um".
+# Isto resolve o problema dos URLs da Vercel que mudam constantemente.
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,7 +24,6 @@ CONTENT_DIR = Path("content")
 def read_root():
     return {"message": "Bem-vindo à API do Guia do Adulto Moderno!"}
 
-# NOVO ENDPOINT DE TESTE
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
@@ -68,4 +65,15 @@ def get_article(slug: str):
         "category": post.metadata.get("category", "Sem categoria"),
         "content": post.content
     }
+```
+
+**Passos Finais (Agora sim!):**
+
+1.  **Guarde** o ficheiro `main.py` atualizado.
+2.  **Envie para o GitHub** com o seguinte commit:
+    ```bash
+    git add .
+    git commit -m "Fix: Permite todas as origens no CORS para compatibilidade total com a Vercel"
+    git push
+    
 
