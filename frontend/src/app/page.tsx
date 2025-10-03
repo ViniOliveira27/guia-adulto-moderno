@@ -1,51 +1,66 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 
-// Atualizamos o tipo para incluir a nova propriedade "category"
+// Atualizamos o tipo de artigo para incluir a categoria
 type Article = {
   slug: string;
   title: string;
   category: string;
 };
 
+// Esta função irá buscar os dados da nossa API
+async function fetchArticles(apiUrl: string): Promise<Article[]> {
+  const res = await fetch(`${apiUrl}/articles`);
+  if (!res.ok) {
+    throw new Error('Falha ao buscar os artigos');
+  }
+  return res.json();
+}
+
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
-  const [searchTerm, setSearchTerm] = useState('');
-  // Novo estado para controlar a categoria selecionada
-  const [selectedCategory, setSelectedCategory] = useState('Todos');
+  // Usamos o URL público do Render diretamente para garantir que funciona no deploy
+  const API_URL = "https://guia-adulto-moderno.onrender.com";
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    if (!API_URL) {
+      setError("A URL da API não está configurada.");
+      setLoading(false);
+      return;
+    }
+
+    const loadArticles = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/articles');
-        if (!res.ok) {
-          throw new Error('Falha ao buscar dados da API');
-        }
-        const data: Article[] = await res.json();
-        setArticles(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Ocorreu um erro desconhecido');
+        setLoading(true);
+        const fetchedArticles = await fetchArticles(API_URL);
+        setArticles(fetchedArticles);
+        // Extrai categorias únicas dos artigos
+        const uniqueCategories = Array.from(new Set(fetchedArticles.map(a => a.category)));
+        setCategories(uniqueCategories);
+      } catch (e) {
+        setError('Erro: Failed to fetch');
       } finally {
         setLoading(false);
       }
     };
-    fetchArticles();
-  }, []);
+    loadArticles();
+  }, [API_URL]);
 
-  // 1. Extrai todas as categorias únicas dos artigos
-  const categories = ['Todos', ...Array.from(new Set(articles.map(article => article.category)))];
-
-  // 2. Filtra os artigos com base no termo de busca E na categoria selecionada
-  const filteredArticles = articles.filter(article => {
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'Todos' || article.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Filtra os artigos com base na busca e na categoria selecionada
+  const filteredArticles = articles
+    .filter(article =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter(article =>
+      selectedCategory ? article.category === selectedCategory : true
+    );
 
   return (
     <main>
@@ -56,47 +71,48 @@ export default function Home() {
           type="text"
           placeholder="Buscar artigo..."
           className="search-input"
-          value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      {/* 3. Secção para os botões de filtro de categoria */}
       <div className="category-filters">
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className={`category-button ${!selectedCategory ? 'active' : ''}`}
+        >
+          Todos
+        </button>
         {categories.map(category => (
-          <button 
-            key={category} 
-            className={`category-button ${selectedCategory === category ? 'active' : ''}`}
+          <button
+            key={category}
             onClick={() => setSelectedCategory(category)}
+            className={`category-button ${selectedCategory === category ? 'active' : ''}`}
           >
             {category}
           </button>
         ))}
       </div>
-
-      {loading && <p>Carregando artigos...</p>}
-      {error && <p className="error-message">Erro: {error}</p>}
       
+      {loading && <p>A carregar artigos...</p>}
+      {error && <p className="error-message">{error}</p>}
+
       {!loading && !error && (
         <ul className="article-grid">
-          {filteredArticles.length > 0 ? (
-            filteredArticles.map((article) => (
-              <li key={article.slug} className="article-card">
-                <Link href={`/${article.slug}`}>
+          {filteredArticles.map((article) => (
+            <li key={article.slug}>
+              <div className="article-card">
+                <a href={`/${article.slug}`}>
                   <div>
                     <span className="article-category">{article.category}</span>
                     <h3>{article.title}</h3>
                   </div>
                   <p>Leia mais →</p>
-                </Link>
-              </li>
-            ))
-          ) : (
-            <p>Nenhum artigo encontrado.</p>
-          )}
+                </a>
+              </div>
+            </li>
+          ))}
         </ul>
       )}
     </main>
   );
 }
-
