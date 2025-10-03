@@ -9,7 +9,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     # Este é o URL público mais recente do seu site na Vercel
-    "https://guia-adulto-moderno-3cqwqtbww9-vinioliveira27s-projects.vercel.app",
+    "https://guia-adulto-moderno-lvg5kbnqz-vinioliveira27s-projects.vercel.app",
 ]
 
 app.add_middleware(
