@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-// Atualizamos o tipo de artigo para incluir a categoria
+// Atualizamos o tipo de artigo para incluir a categoria 
 type Article = {
   slug: string;
   title: string;
@@ -116,3 +116,4 @@ export default function Home() {
     </main>
   );
 }
+

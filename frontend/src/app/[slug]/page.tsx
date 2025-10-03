@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
 // Define o tipo do artigo, incluindo o título e a categoria
@@ -12,8 +11,8 @@ type Article = {
 // Função para buscar os dados de um artigo específico
 async function getArticle(slug: string): Promise<Article | null> {
   try {
-    // IMPORTANTE: Para o deploy, esta URL precisa ser a URL pública do seu backend
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || `http://127.0.0.1:8000`;
+    // Usamos o URL público do Render diretamente para garantir que funciona no deploy
+    const apiUrl = "https://guia-adulto-moderno.onrender.com";
     const res = await fetch(`${apiUrl}/articles/${slug}`, {
       cache: 'no-store',
     });
@@ -40,14 +39,14 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         <p>
           O artigo que você está procurando não existe ou foi movido.
         </p>
-        <Link href="/">← Voltar para a lista</Link>
+        <a href="/">← Voltar para a lista</a>
       </main>
     );
   }
 
   return (
     <main>
-      <Link href="/">← Voltar para a lista</Link>
+      <a href="/">← Voltar para a lista</a>
       <div style={{ marginTop: '20px' }}>
         <span className="article-category">{article.category}</span>
         <h1>{article.title}</h1>
