@@ -26,6 +26,11 @@ CONTENT_DIR = Path("content")
 def read_root():
     return {"message": "Bem-vindo à API do Guia do Adulto Moderno!"}
 
+# NOVO ENDPOINT DE TESTE
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.get("/articles")
 def get_articles():
     articles = []
