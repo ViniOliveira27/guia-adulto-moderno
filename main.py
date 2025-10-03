@@ -65,15 +65,3 @@ def get_article(slug: str):
         "category": post.metadata.get("category", "Sem categoria"),
         "content": post.content
     }
-```
-
-**Passos Finais (Agora sim!):**
-
-1.  **Guarde** o ficheiro `main.py` atualizado.
-2.  **Envie para o GitHub** com o seguinte commit:
-    ```bash
-    git add .
-    git commit -m "Fix: Permite todas as origens no CORS para compatibilidade total com a Vercel"
-    git push
-    
-
