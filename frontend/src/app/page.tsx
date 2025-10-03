@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-// Atualizamos o tipo de artigo para incluir a categoria 
+// Atualizamos o tipo de artigo para incluir a categoria
 type Article = {
   slug: string;
   title: string;
@@ -30,12 +31,6 @@ export default function Home() {
   const API_URL = "https://guia-adulto-moderno.onrender.com";
 
   useEffect(() => {
-    if (!API_URL) {
-      setError("A URL da API não está configurada.");
-      setLoading(false);
-      return;
-    }
-
     const loadArticles = async () => {
       try {
         setLoading(true);
@@ -51,7 +46,7 @@ export default function Home() {
       }
     };
     loadArticles();
-  }, [API_URL]);
+  }, []);
 
   // Filtra os artigos com base na busca e na categoria selecionada
   const filteredArticles = articles
@@ -99,16 +94,14 @@ export default function Home() {
       {!loading && !error && (
         <ul className="article-grid">
           {filteredArticles.map((article) => (
-            <li key={article.slug}>
-              <div className="article-card">
-                <a href={`/${article.slug}`}>
-                  <div>
-                    <span className="article-category">{article.category}</span>
-                    <h3>{article.title}</h3>
-                  </div>
-                  <p>Leia mais →</p>
-                </a>
-              </div>
+            <li key={article.slug} className="article-card">
+              <Link href={`/${article.slug}`}>
+                <div>
+                  <span className="article-category">{article.category}</span>
+                  <h3>{article.title}</h3>
+                </div>
+                <p>Leia mais →</p>
+              </Link>
             </li>
           ))}
         </ul>
